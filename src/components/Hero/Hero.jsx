@@ -6,7 +6,6 @@ import {
   InputLabel,
   Select,
   MenuItem,
-  Button,
 } from "@mui/material";
 import React from "react";
 import "./Hero.css";
@@ -16,6 +15,7 @@ import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import dayjs from "dayjs";
 import Autocomplete from "@mui/material/Autocomplete";
 import TextField from "@mui/material/TextField";
+import LoadingButton from "@mui/lab/LoadingButton";
 
 const Hero = () => {
   const [age, setAge] = React.useState("");
@@ -40,17 +40,15 @@ const Hero = () => {
         <Box
           className="box"
           sx={{
+            height: { xl: "90px", xs: "400px", md: "400px" },
             justifyContent: "space-between",
             alignItems: "center",
-            flexDirection: { sm: "row", xs: "column" },
+            flexDirection: { xl: "row", md: "column", xs: "column" },
           }}
         >
           <Box className="box_item">
             <LocalizationProvider dateAdapter={AdapterDayjs}>
-              <DemoContainer
-                sx={{ width: "290px" }}
-                components={["DatePicker"]}
-              >
+              <DemoContainer components={["DatePicker"]}>
                 <DatePicker
                   format="DD - MM - YYYY"
                   defaultValue={dayjs(new Date())}
@@ -112,20 +110,20 @@ const Hero = () => {
             />
           </Box>
           <Box className="box_item">
-            <Button
+            <LoadingButton
+              loading
+              loadingIndicator="Izlamoqda..."
+              variant="contained"
               sx={{
-                width: "100%",
-                height: "100px",
+                width: "180px",
+                height: "55px",
                 color: "#fff",
-                background: "#006AFF",
-                ":hover": {
-                  background: "#000Aff",
-                },
+                fontSize: "16px",
+                fontWeight: "600",
               }}
-              size="large"
             >
-              Large
-            </Button>
+              Izlash
+            </LoadingButton>
           </Box>
         </Box>
       </Container>
