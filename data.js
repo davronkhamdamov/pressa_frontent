@@ -1,6 +1,6 @@
 // https://api.unsplash.com/photos/random?client_id=8crWkVjYAKf1SZoLkIvDW1G3LAQ2WAJoZEp-1r5JMAs&count=40
 
-[
+const data = [
     {
         "id": "og6nupT7udY",
         "slug": "og6nupT7udY",
@@ -2333,7 +2333,7 @@
             "id": "m6Q1Gzoicm8",
             "updated_at": "2023-05-16T16:35:58Z",
             "username": "tepapa",
-            "name": "Museum of New Zealand Te Papa Tongarewa",
+            "name": "Museum of",
             "first_name": "Museum of New Zealand Te Papa Tongarewa",
             "last_name": null,
             "twitter_username": "te_papa",
@@ -2859,3 +2859,4 @@
         "downloads": 1387
     }
 ]
+export default data

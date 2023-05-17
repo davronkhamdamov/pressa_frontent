@@ -1,0 +1,36 @@
+.card_wrapper {
+  width: 100%;
+  margin: 200px 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 50px;
+}
+.card_item {
+  width: 417px;
+  height: 650px;
+  border: 1px solid rgba(51, 51, 51, 0.1);
+  border-radius: 10px;
+}
+.card_img_wrapp {
+  width: 100%;
+  height: 400px;
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  overflow: hidden;
+}
+.card_img_wrapp img {
+  width: 100%;
+  height: 400px;
+  object-fit: contain;
+}
+.card_text {
+  width: 100%;
+  padding: 20px;
+}
+
+.card_text h3 {
+  height: 60px;
+}
