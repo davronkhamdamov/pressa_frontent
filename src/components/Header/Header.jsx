@@ -18,6 +18,7 @@ import { styled, alpha } from "@mui/material/styles";
 import Box from "@mui/material/Box";
 import InputBase from "@mui/material/InputBase";
 import SearchIcon from "@mui/icons-material/Search";
+import { Link } from "react-router-dom";
 
 const drawerWidth = 240;
 const navItems = ["Biz haqimizda", "Savol va javoblar"];
@@ -75,9 +76,13 @@ function Header(props) {
 
   const drawer = (
     <Box onClick={handleDrawerToggle} sx={{ textAlign: "center" }}>
-      <Typography variant="h6" sx={{ my: 2 }}>
+      <Link
+        to="/"
+        sx={{ my: 2 }}
+        style={{ color: "#000", textDecoration: "none", lineHeight: "50px" }}
+      >
         Pressa
-      </Typography>
+      </Link>
       <Divider />
       <List>
         {navItems.map((item) => (
@@ -108,13 +113,22 @@ function Header(props) {
           >
             <MenuIcon />
           </IconButton>
-          <Typography
-            variant="h6"
-            component="div"
-            sx={{ flexGrow: 1, display: { xs: "none", sm: "block" } }}
-          >
-            Pressa
-          </Typography>
+          <Box sx={{ flexGrow: 3, display: { xs: "none", sm: "block" } }}>
+            <Link
+              to="/"
+              sx={{ my: 2 }}
+              style={{
+                color: "#fff",
+                fontSize: "25px",
+                fontWeight: "800",
+                flexGrow: 3,
+                textDecoration: "none",
+                lineHeight: "50px",
+              }}
+            >
+              Pressa
+            </Link>
+          </Box>
           <Search>
             <SearchIconWrapper>
               <SearchIcon />
@@ -151,12 +165,17 @@ function Header(props) {
             size="large"
             startIcon={<Add />}
           >
-            <Typography
-              variant="p"
-              sx={{ display: { xs: "none", md: "block" } }}
+            <Link
+              to="/annaunced"
+              style={{ textDecoration: "none", color: "#eee " }}
             >
-              E’lon berish
-            </Typography>
+              <Typography
+                variant="p"
+                sx={{ display: { xs: "none", md: "block" } }}
+              >
+                E’lon berish
+              </Typography>
+            </Link>
           </Button>
         </Toolbar>
       </AppBar>
