@@ -9,7 +9,7 @@ import QueryStatsIcon from "@mui/icons-material/QueryStats";
 import DateRangeIcon from "@mui/icons-material/DateRange";
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
 import OnlinePredictionIcon from "@mui/icons-material/OnlinePrediction";
-import LeakRemoveIcon from "@mui/icons-material/LeakRemove";
+import RemoveRedEyeIcon from "@mui/icons-material/RemoveRedEye";
 const SkeletonSchema = () => {
   return (
     <Box className="card_item">
@@ -139,7 +139,7 @@ const Cards = () => {
                           mt: 3,
                         }}
                       >
-                        <LeakRemoveIcon />
+                        <RemoveRedEyeIcon />
                         <p>{e.user.name}</p>
                       </Box>
                     </Box>
