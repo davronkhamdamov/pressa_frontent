@@ -1,0 +1,84 @@
+@import url(https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap);
+
+.home_page_link {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: #111;
+  text-decoration: none;
+}
+.elon_title {
+  font-size: 24px;
+  line-height: 29px;
+  color: #000000;
+}
+.elon_time {
+  font-family: "Ubuntu", sans-serif;
+  font-size: 18px;
+  line-height: 21px;
+}
+.date_text {
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 40px;
+  color: #333;
+}
+.category_select_title {
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 30px;
+  color: #333;
+}
+.status {
+  width: 50%;
+  height: 55px;
+  background-color: #eee;
+  border-radius: 20px;
+  display: flex;
+  overflow: hidden;
+}
+#status_input:checked ~ .status .online {
+  transform: translate(100%);
+}
+.online {
+  width: 50%;
+  height: 55px;
+  background: #006aff;
+  transition: 0.4s ease-out;
+  border-radius: 20px;
+}
+.text_area {
+  width: 100%;
+  resize: none;
+  border: none;
+  outline: none;
+  padding: 20px 0;
+  font-family: "Bebas Neue";
+  font-style: normal;
+  font-weight: 400;
+  font-size: 32px;
+  line-height: 42px;
+  color: #333333;
+  opacity: 0.2;
+}
+.img_hint {
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 19px;
+  color: #006aff;
+}
+.mavzu_input {
+  width: 100%;
+  border-radius: 5px;
+  padding: 15px 10px;
+  font-size: 20px;
+  line-height: 17px;
+  color: #333;
+  font-family: sans-serif;
+}
+
+@media (max-width: 600px) {
+  .status {
+    width: 100%;
+  }
+}
