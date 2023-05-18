@@ -7,12 +7,9 @@
   align-items: center;
   justify-content: space-between;
   padding: 0 40px;
-  background: linear-gradient(
-    265.48deg,
-    rgba(0, 106, 255, 0.9),
-    rgba(0, 106, 255, 0.623)
-  );
-  backdrop-filter: blur(50px);
+  background: rgba(0, 106, 255, 0.6);
+  backdrop-filter: blur(10px);
+  z-index: 99;
 }
 
 .footer > h4 {
