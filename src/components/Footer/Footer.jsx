@@ -6,6 +6,7 @@ import FacebookOutlinedIcon from "@mui/icons-material/FacebookOutlined";
 import InstagramIcon from "@mui/icons-material/Instagram";
 import TelegramIcon from "@mui/icons-material/Telegram";
 const Footer = () => {
+  if (location.pathname === "/login") return;
   return (
     <div className="footer">
       <h4>Pressa</h4>
