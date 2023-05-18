@@ -61,8 +61,18 @@ const Hero = () => {
               multiple
               limitTags={1}
               id="multiple-limit-tags"
-              options={top100Films}
+              options={[
+                { title: "Web dasturlash", isCategory: "IT" },
+                { title: "Mobile dasturlash", isCategory: "Dizayn" },
+                { title: "UI/UX dizayn", isCategory: "Dizayn" },
+                { title: "Grafik dizayn", isCategory: "Dizayn" },
+                { title: "Menejment", isCategory: "Biznes" },
+                { title: "Kredit va audit", isCategory: "Biznes" },
+                { title: "Matematika", isCategory: "Ta’lim" },
+                { title: "Fizika", isCategory: "Ta’lim" },
+              ]}
               getOptionLabel={(option) => option.title}
+              groupBy={(option) => option.isCategory}
               renderInput={(params) => (
                 <TextField
                   sx={{
@@ -71,20 +81,18 @@ const Hero = () => {
                     borderRadius: "10px",
                   }}
                   {...params}
-                  placeholder="Favorites"
+                  placeholder="Yo'nalishi"
                 />
               )}
             />
           </Box>
           <Box className="box_item">
             <FormControl>
-              <InputLabel id="demo-simple-select-label">Age</InputLabel>
               <Select
                 sx={{ width: "290px" }}
                 labelId="demo-simple-select-label"
                 id="demo-simple-select"
                 value={age}
-                label="Age"
                 onChange={handleChange}
               >
                 <MenuItem value={"offline"}>Offline</MenuItem>
@@ -97,10 +105,10 @@ const Hero = () => {
               multiple
               limitTags={1}
               id="multiple-limit-tags"
-              options={top100Films}
+              options={[{ title: "The Shawshank Redemption", year: 1994 }]}
               getOptionLabel={(option) => option.title}
               renderInput={(params) => (
-                <TextField {...params} placeholder="Favorites" />
+                <TextField {...params} placeholder="Ismlar" />
               )}
               sx={{
                 width: "290px",
@@ -131,13 +139,4 @@ const Hero = () => {
   );
 };
 
-const top100Films = [
-  { title: "The Shawshank Redemption", year: 1994 },
-  { title: "The Godfather", year: 1972 },
-  { title: "The Godfather: Part II", year: 1974 },
-  { title: "The Dark Knight", year: 2008 },
-  { title: "12 Angry Men", year: 1957 },
-  { title: "Schindler's List", year: 1993 },
-  { title: "Pulp Fiction", year: 1994 },
-];
 export default Hero;
