@@ -64,7 +64,7 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 }));
 
 function Header(props) {
-  if (location.pathname === "/login") {
+  if (location.pathname === "/admin") {
     return;
   }
   const { window } = props;
