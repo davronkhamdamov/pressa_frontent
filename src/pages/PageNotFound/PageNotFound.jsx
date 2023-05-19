@@ -4,20 +4,20 @@ import { Link } from "react-router-dom";
 
 const PageNotFound = () => {
   return (
-    <div class="flex-container">
-      <div class="text-center">
+    <div className="flex-container">
+      <div className="text-center">
         <h1>
-          <span class="fade-in" id="digit1">
+          <span className="fade-in" id="digit1">
             4
           </span>
-          <span class="fade-in" id="digit2">
+          <span className="fade-in" id="digit2">
             0
           </span>
-          <span class="fade-in" id="digit3">
+          <span className="fade-in" id="digit3">
             4
           </span>
         </h1>
-        <h3 class="fadeIn">PAGE NOT FOUND</h3>
+        <h3 className="fadeIn">PAGE NOT FOUND</h3>
         <Link to="/" name="button">
           Return To Home
         </Link>
