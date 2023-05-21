@@ -14,15 +14,102 @@ import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
 import { TimePicker } from "@mui/x-date-pickers";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import SendIcon from "@mui/icons-material/Send";
 import { LoadingButton } from "@mui/lab";
 
 const Annaounced = () => {
   const [isOnline, setIsOnlion] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [imgTitle, setImgTitle] = useState("");
+  const [isSubmit, setIsSubmit] = useState(false);
+  const [DateInputEl, setDateInputEl] = useState("");
+  const [timeInputEl, setTimeInputEl] = useState();
+  const [yonalishInputEl, setYonalishInputEl] = useState();
+  const [ichkiYonalishIchkiInputEl, setIchkiYonalishIchkiInputEl] = useState();
+  const [linkInputEl, setLinkInputEl] = useState();
+  const [fullNameInputEl, setFullNameInputEl] = useState();
+  const [PhoneNumInputEl, setPhoneNumInputEl] = useState();
+  const [desInputEl, setDesInputEl] = useState();
+  const themeTitleInputEl = useRef();
+  const [ThemeTextInputEl, setThemeTextInputEl] = useState();
+  const [imgUrl, setImgurl] = useState("");
+
+  async function fileUpload(formData) {
+    setIsLoading(true);
+    const img = await fetch(
+      "https://api.cloudinary.com/v1_1/didddubfm/image/upload",
+      {
+        method: "POST",
+        body: formData,
+      }
+    )
+      .then((res) => res.json())
+      .then((data) => {
+        return data.url;
+      });
+    return img;
+  }
+
+  async function submit(e) {
+    let files = e.target.files;
+    setImgTitle(files[0].name);
+    const formData = new FormData();
+    formData.append("file", files[0]);
+    formData.append("upload_preset", "youtube");
+    const imgUrl = await fileUpload(formData);
+    setIsLoading(false);
+    setImgurl(imgUrl);
+  }
+  console.log([
+    {
+      img_url: imgUrl,
+      title: themeTitleInputEl?.current?.value,
+      subject_text: ThemeTextInputEl,
+      date: DateInputEl,
+      time: timeInputEl,
+      yonalish: yonalishInputEl,
+      ichki_yonalish: ichkiYonalishIchkiInputEl,
+      link: linkInputEl,
+      fullname: fullNameInputEl,
+      phone_number: PhoneNumInputEl,
+      description: desInputEl,
+      isOnline,
+    },
+  ]);
+  const submitData = () => {
+    setIsSubmit(true);
+    fetch("http://localhost:4000/announcement/create", {
+      method: "POST",
+      body: JSON.stringify({
+        img_url: imgUrl,
+        title: themeTitleInputEl?.current?.value,
+        subject_text: ThemeTextInputEl,
+        date: DateInputEl,
+        time: timeInputEl,
+        yonalish: yonalishInputEl,
+        ichki_yonalish: ichkiYonalishIchkiInputEl,
+        link: linkInputEl,
+        fullname: fullNameInputEl,
+        phone_number: PhoneNumInputEl,
+        description: desInputEl,
+        isOnline,
+      }),
+      headers: {
+        "Content-Type": "application/json",
+      },
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        console.log(data);
+        setIsSubmit(false);
+      });
+  };
+  const dataFormat = (el) => {
+    return String(el).padStart(2, 0);
+  };
   return (
-    <Container fixed sx={{ m: "0 10" }}>
+    <Container fixed sx={{ margin: "100px auto" }}>
       <Link to="/" className="home_page_link">
         <HomeIcon />
         Home page
@@ -55,13 +142,27 @@ const Annaounced = () => {
               <Box sx={{ width: { xs: "100%", sm: "50%" } }}>
                 <br />
                 <p className="date_text">O’tkaziladigan sanani kiriting</p>
-                <DatePicker sx={{ width: "100%" }} disablePast />
+                <DatePicker
+                  onChange={(e) =>
+                    setDateInputEl(
+                      `${dataFormat(e.$D)}-${dataFormat(e.$M)}-${e.$y}`
+                    )
+                  }
+                  sx={{ width: "100%" }}
+                  disablePast
+                />
               </Box>
               <DemoContainer
                 sx={{ width: { xs: "100%", sm: "50%" } }}
                 components={["TimePicker"]}
               >
-                <TimePicker sx={{ width: "100%" }} label="Basic time picker" />
+                <TimePicker
+                  onChange={(e) =>
+                    setTimeInputEl(`${dataFormat(e.$H)}:${dataFormat(e.$m)}`)
+                  }
+                  sx={{ width: "100%" }}
+                  label="Basic time picker"
+                />
               </DemoContainer>
             </Box>
           </LocalizationProvider>
@@ -89,7 +190,10 @@ const Annaounced = () => {
                   { title: "Matematika", isCategory: "Ta’lim" },
                   { title: "Fizika", isCategory: "Ta’lim" },
                 ]}
-                getOptionLabel={(option) => option.title}
+                getOptionLabel={(option) => {
+                  setYonalishInputEl(option.title);
+                  return option.title;
+                }}
                 groupBy={(option) => option.isCategory}
                 renderInput={(params) => (
                   <TextField
@@ -106,6 +210,7 @@ const Annaounced = () => {
             <Box sx={{ width: { xs: "100%", sm: "50%" } }}>
               <p className="category_select_title">Ichki yo’nalish</p>
               <Autocomplete
+                onChange={(e) => setIchkiYonalishIchkiInputEl(e.target.value)}
                 id="multiple-limit-tags"
                 options={[
                   { title: "Web dasturlash", isCategory: "IT" },
@@ -117,7 +222,10 @@ const Annaounced = () => {
                   { title: "Matematika", isCategory: "Ta’lim" },
                   { title: "Fizika", isCategory: "Ta’lim" },
                 ]}
-                getOptionLabel={(option) => option.title}
+                getOptionLabel={(option) => {
+                  setIchkiYonalishIchkiInputEl(option.title);
+                  return option.title;
+                }}
                 groupBy={(option) => option.isCategory}
                 renderInput={(params) => (
                   <TextField
@@ -146,9 +254,7 @@ const Annaounced = () => {
               type="checkbox"
               id="status_input"
               style={{ display: "none" }}
-              onChange={(e) => {
-                setIsOnlion(e.target.checked);
-              }}
+              onChange={(e) => setIsOnlion(e.target.checked)}
             />
             <label htmlFor="status_input" className="status">
               <Box className="online">
@@ -221,6 +327,7 @@ const Annaounced = () => {
               }}
             >
               <TextField
+                onChange={(e) => setLinkInputEl(e.target.value)}
                 sx={{
                   width: "100%",
                   background: "#fff",
@@ -244,6 +351,7 @@ const Annaounced = () => {
             }}
           >
             <TextField
+              onChange={(e) => setFullNameInputEl(e.target.value)}
               required
               sx={{
                 width: { xs: "100%", sm: "50%" },
@@ -275,6 +383,7 @@ const Annaounced = () => {
             }}
           >
             <TextField
+              onChange={(e) => setPhoneNumInputEl(e.target.value)}
               required
               sx={{
                 width: "100%",
@@ -301,12 +410,14 @@ const Annaounced = () => {
         <Paper>
           <h2>Post</h2>
           <textarea
+            ref={themeTitleInputEl}
             rows="8"
             cols="70"
             className="text_area"
             placeholder="Mavzuni sarlavhasi"
           ></textarea>
           <TextField
+            onChange={(e) => setDesInputEl(e.target.value)}
             required
             sx={{
               width: "100%",
@@ -317,25 +428,49 @@ const Annaounced = () => {
             label="Description"
             variant="outlined"
           />
-          <Box sx={{ padding: "40px 0" }}>
-            <LoadingButton
-              variant="contained"
-              component="label"
-              loading={isLoading}
-              loadingPosition="end"
-              sx={{ width: "200px", height: "50px", fontSize: "14px" }}
-              endIcon={<SendIcon />}
+          <Box sx={{ padding: "50px 0" }}>
+            <Box
+              sx={{
+                display: "flex",
+                gap: "50px",
+                alignItems: "center",
+                margin: "30px 0",
+              }}
             >
-              <input
-                type="file"
-                id="photoInput"
-                hidden
-                accept=".jpg, .jpeg, .png"
-              />
-              Rasm Yuklash
-            </LoadingButton>
-            <br />
-            <br />
+              <LoadingButton
+                variant="contained"
+                component="label"
+                loading={isLoading}
+                loadingPosition="end"
+                sx={{ width: "200px", height: "50px", fontSize: "14px" }}
+                endIcon={<SendIcon />}
+              >
+                <input
+                  onChange={submit}
+                  type="file"
+                  id="photoInput"
+                  hidden
+                  accept=".jpg, .jpeg, .png"
+                />
+                Rasm Yuklash
+              </LoadingButton>
+              <Box>
+                {imgUrl && (
+                  <Box>
+                    <p>{imgTitle}</p>
+                    <p
+                      style={{
+                        fontSize: "12px",
+                        lineHeight: "14px",
+                        color: "rgba(0,0,0,0.4)",
+                      }}
+                    >
+                      Rasm jo'natishga tayyor
+                    </p>
+                  </Box>
+                )}
+              </Box>
+            </Box>
             <p className="img_hint">
               Yuklanyotgan rasm o’lchami 1080x1080 hajmi 2 mb dan oshmasin
             </p>
@@ -343,6 +478,9 @@ const Annaounced = () => {
           <h3>Mavzu matni</h3>
           <br />
           <TextareaAutosize
+            onChange={(e) => {
+              setThemeTextInputEl(e.target.value);
+            }}
             minRows={10}
             placeholder="Mavzu matni"
             className="mavzu_input"
@@ -365,8 +503,9 @@ const Annaounced = () => {
               Bekor qilish
             </LoadingButton>
             <LoadingButton
+              onClick={submitData}
               sx={{ width: "200px", height: "50px" }}
-              loading
+              loading={isSubmit}
               variant="contained"
               size="medium"
             >
