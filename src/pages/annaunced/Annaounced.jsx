@@ -17,23 +17,26 @@ import { TimePicker } from "@mui/x-date-pickers";
 import { useRef, useState } from "react";
 import SendIcon from "@mui/icons-material/Send";
 import { LoadingButton } from "@mui/lab";
+import errors from "../../utils/errors";
+import dayjs from "dayjs";
 
 const Annaounced = () => {
   const [isOnline, setIsOnlion] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [imgTitle, setImgTitle] = useState("");
   const [isSubmit, setIsSubmit] = useState(false);
-  const [DateInputEl, setDateInputEl] = useState("");
-  const [timeInputEl, setTimeInputEl] = useState();
+  const [DateInputEl, setDateInputEl] = useState(dayjs);
+  const [timeInputEl, setTimeInputEl] = useState(dayjs());
   const [yonalishInputEl, setYonalishInputEl] = useState();
   const [ichkiYonalishIchkiInputEl, setIchkiYonalishIchkiInputEl] = useState();
   const [linkInputEl, setLinkInputEl] = useState();
   const [fullNameInputEl, setFullNameInputEl] = useState();
-  const [PhoneNumInputEl, setPhoneNumInputEl] = useState();
+  const [PhoneNumInputEl, setPhoneNumInputEl] = useState(998);
   const [desInputEl, setDesInputEl] = useState();
   const themeTitleInputEl = useRef();
   const [ThemeTextInputEl, setThemeTextInputEl] = useState();
   const [imgUrl, setImgurl] = useState("");
+  const [isError, setIsError] = useState(new Array(10).fill(false));
 
   async function fileUpload(formData) {
     setIsLoading(true);
@@ -61,29 +64,14 @@ const Annaounced = () => {
     setIsLoading(false);
     setImgurl(imgUrl);
   }
-  console.log([
-    {
-      img_url: imgUrl,
-      title: themeTitleInputEl?.current?.value,
-      subject_text: ThemeTextInputEl,
-      date: DateInputEl,
-      time: timeInputEl,
-      yonalish: yonalishInputEl,
-      ichki_yonalish: ichkiYonalishIchkiInputEl,
-      link: linkInputEl,
-      fullname: fullNameInputEl,
-      phone_number: PhoneNumInputEl,
-      description: desInputEl,
-      isOnline,
-    },
-  ]);
+
   const submitData = () => {
     setIsSubmit(true);
     fetch("http://localhost:4000/announcement/create", {
       method: "POST",
       body: JSON.stringify({
         img_url: imgUrl,
-        title: themeTitleInputEl?.current?.value,
+        title: themeTitleInputEl.current.value,
         subject_text: ThemeTextInputEl,
         date: DateInputEl,
         time: timeInputEl,
@@ -101,7 +89,14 @@ const Annaounced = () => {
     })
       .then((res) => res.json())
       .then((data) => {
-        console.log(data);
+        if (data.error) {
+          console.log(data);
+          let arr = [];
+          data.message.errors.map((e, i) => {
+            arr[errors.indexOf(e.message)] = true;
+          });
+          setIsError(arr);
+        }
         setIsSubmit(false);
       });
   };
@@ -143,6 +138,7 @@ const Annaounced = () => {
                 <br />
                 <p className="date_text">O’tkaziladigan sanani kiriting</p>
                 <DatePicker
+                  value={DateInputEl}
                   onChange={(e) =>
                     setDateInputEl(
                       `${dataFormat(e.$D)}-${dataFormat(e.$M)}-${e.$y}`
@@ -157,11 +153,12 @@ const Annaounced = () => {
                 components={["TimePicker"]}
               >
                 <TimePicker
+                  value={timeInputEl}
                   onChange={(e) =>
                     setTimeInputEl(`${dataFormat(e.$H)}:${dataFormat(e.$m)}`)
                   }
                   sx={{ width: "100%" }}
-                  label="Basic time picker"
+                  label="Vaqtni belgilang"
                 />
               </DemoContainer>
             </Box>
@@ -180,6 +177,7 @@ const Annaounced = () => {
               <p className="category_select_title">Yo’nalishni belgilang</p>
               <Autocomplete
                 id="multiple-limit-tags"
+                defaultValue={{ title: "Web dasturlash" }}
                 options={[
                   { title: "Web dasturlash", isCategory: "IT" },
                   { title: "Mobile dasturlash", isCategory: "Dizayn" },
@@ -210,6 +208,7 @@ const Annaounced = () => {
             <Box sx={{ width: { xs: "100%", sm: "50%" } }}>
               <p className="category_select_title">Ichki yo’nalish</p>
               <Autocomplete
+                defaultValue={{ title: "Web dasturlash" }}
                 onChange={(e) => setIchkiYonalishIchkiInputEl(e.target.value)}
                 id="multiple-limit-tags"
                 options={[
@@ -336,6 +335,7 @@ const Annaounced = () => {
                 id="outlined-basic"
                 label="Link kiriting"
                 variant="outlined"
+                error={isError[1]}
               />
             </Box>
           </Box>
@@ -361,6 +361,7 @@ const Annaounced = () => {
               id="outlined-basic"
               label="Ismi sharifi"
               variant="outlined"
+              error={isError[3]}
             />
             <TextField
               required
@@ -383,8 +384,12 @@ const Annaounced = () => {
             }}
           >
             <TextField
-              onChange={(e) => setPhoneNumInputEl(e.target.value)}
+              onChange={(e) => {
+                setPhoneNumInputEl(e.target.value);
+              }}
               required
+              type="number"
+              value={PhoneNumInputEl}
               sx={{
                 width: "100%",
                 background: "#fff",
@@ -393,6 +398,7 @@ const Annaounced = () => {
               id="outlined-basic"
               label="Telefon raqami"
               variant="outlined"
+              error={isError[2]}
             />
             <TextField
               required
@@ -416,6 +422,10 @@ const Annaounced = () => {
             className="text_area"
             placeholder="Mavzuni sarlavhasi"
           ></textarea>
+          {isError[8] && (
+            <p style={{ color: "#d32f2f" }}>Birorta bir mavzu o'ylab toping</p>
+          )}
+          <br />
           <TextField
             onChange={(e) => setDesInputEl(e.target.value)}
             required
@@ -427,6 +437,7 @@ const Annaounced = () => {
             id="outlined-basic"
             label="Description"
             variant="outlined"
+            error={isError[0] || isError[10]}
           />
           <Box sx={{ padding: "50px 0" }}>
             <Box
@@ -469,6 +480,11 @@ const Annaounced = () => {
                     </p>
                   </Box>
                 )}
+                {isError[9] && (
+                  <p style={{ color: "#d32f2f", fontSize: "14px" }}>
+                    Iltimos birorta bir rasm tanlang
+                  </p>
+                )}
               </Box>
             </Box>
             <p className="img_hint">
@@ -484,6 +500,9 @@ const Annaounced = () => {
             minRows={10}
             placeholder="Mavzu matni"
             className="mavzu_input"
+            style={{
+              border: isError[4] ? "1px solid #d32f2f" : "1px solid black",
+            }}
           />
           <Box
             sx={{
