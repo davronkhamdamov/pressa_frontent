@@ -15,13 +15,15 @@ import { Avatar, Container, Stack } from "@mui/material";
 import HomeOutlinedIcon from "@mui/icons-material/HomeOutlined";
 import ArrowCircleLeftOutlinedIcon from "@mui/icons-material/ArrowCircleLeftOutlined";
 import SettingsOutlinedIcon from "@mui/icons-material/SettingsOutlined";
-import data from "../../../data";
 import { LoadingButton } from "@mui/lab";
-import time_conver from "time-conver";
+import { Link } from "react-router-dom";
 
-export default function PrimarySearchAppBar() {
+export default function PrimarySearchAppBar({ setIsAdmin }) {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
+  const [allData, setAllData] = React.useState(null);
+  const [filterStatus, setFilterStatus] = React.useState("awaits");
+  const [changeStatusBtn, setChangeStatusBtn] = React.useState(false);
 
   const isMenuOpen = Boolean(anchorEl);
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
@@ -140,6 +142,64 @@ export default function PrimarySearchAppBar() {
     };
   }
 
+  React.useEffect(() => {
+    fetch("http://localhost:4000/announcement/" + filterStatus, {
+      headers: {
+        token: localStorage.getItem("token"),
+      },
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.errorName === "AuthorizationError") {
+          setIsAdmin(false);
+        }
+        setAllData(data);
+      });
+  }, [filterStatus]);
+
+  const ChangeStatusFetch = (id, isAccept) => {
+    setChangeStatusBtn(true);
+    fetch("http://localhost:4000/announcement/update", {
+      method: "POST",
+      body: JSON.stringify({
+        id,
+        isAccept,
+      }),
+      headers: {
+        "Content-Type": "application/json",
+        token: localStorage.getItem("token"),
+      },
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        setChangeStatusBtn(false);
+        if (data.errorName === "AuthorizationError") setIsAdmin(false);
+        setAllData(data);
+      });
+  };
+  const RejectBtn = ({ id }) => {
+    return (
+      <LoadingButton
+        loading={changeStatusBtn}
+        variant="outlined"
+        onClick={() => ChangeStatusFetch(id, false)}
+      >
+        Bekor qilish
+      </LoadingButton>
+    );
+  };
+  const AcceptBtn = ({ id }) => {
+    return (
+      <LoadingButton
+        loading={changeStatusBtn}
+        variant="contained"
+        onClick={() => ChangeStatusFetch(id, true)}
+      >
+        Tasdiqlash
+      </LoadingButton>
+    );
+  };
+
   return (
     <Box sx={{ display: "flex" }}>
       <Box
@@ -150,16 +210,18 @@ export default function PrimarySearchAppBar() {
           padding: "20px",
         }}
       >
-        <h2
+        <Link
+          to="/"
           style={{
             textAlign: "center",
             fontFamily: "Ubuntu",
-            fontSize: "30px",
+            fontSize: "33px",
             color: "#ffd",
+            textDecoration: "none",
           }}
         >
           Pressa
-        </h2>
+        </Link>
         <Box
           sx={{
             display: "flex",
@@ -361,6 +423,9 @@ export default function PrimarySearchAppBar() {
                 type="radio"
                 style={{ display: "none" }}
                 id="await_input"
+                onChange={(e) => {
+                  setFilterStatus("awaits");
+                }}
               />
               <label htmlFor="await_input" className="await_label">
                 Kutilmoqda
@@ -370,6 +435,9 @@ export default function PrimarySearchAppBar() {
                 type="radio"
                 style={{ display: "none" }}
                 id="accept_input"
+                onChange={(e) => {
+                  setFilterStatus("accept");
+                }}
               />
               <label htmlFor="accept_input" className="accept_label">
                 Qabul qiligan
@@ -379,6 +447,9 @@ export default function PrimarySearchAppBar() {
                 type="radio"
                 style={{ display: "none" }}
                 id="reject_input"
+                onChange={(e) => {
+                  setFilterStatus("reject");
+                }}
               />
               <label htmlFor="reject_input" className="rejected_label">
                 Rad etilgan
@@ -402,7 +473,7 @@ export default function PrimarySearchAppBar() {
                 height: "auto",
               }}
             >
-              {data.map((e) => {
+              {allData?.map((e) => {
                 return (
                   <Box
                     key={e.id}
@@ -417,7 +488,7 @@ export default function PrimarySearchAppBar() {
                     }}
                   >
                     <Box sx={{ width: "70%" }}>
-                      <p className="list_title">{e.alt_description}</p>
+                      <p className="list_title">{e.title}</p>
                       <br />
                       <Box
                         sx={{
@@ -425,34 +496,22 @@ export default function PrimarySearchAppBar() {
                           justifyContent: "space-between",
                         }}
                       >
-                        <span className="list_author">{e.user.username}</span>
-                        <span className="list_text">+998 90 123-45-67</span>
-                        <span className="list_text">
-                          {time_conver
-                            .createdAt(e.created_at)
-                            .split(" ")
-                            .slice(0, 4)
-                            .join(" ")}
-                        </span>
-                        <span className="list_text">
-                          {time_conver
-                            .createdAt(e.created_at)
-                            .split(" ")
-                            .slice(4, 5)
-                            .join(" ")}
-                        </span>
-                        <span className="list_text">
-                          {e.user.instagram_username}
-                        </span>
+                        <span className="list_author">{e?.fullname}</span>
+                        <span className="list_text">{e.phone_number}</span>
+                        <span className="list_text">{e.date}</span>
+                        <span className="list_text">{e.time}</span>
+                        <span className="list_text">{e.yonalish}</span>
                       </Box>
                     </Box>
                     <Box sx={{ display: "flex", gap: "20px" }}>
-                      <LoadingButton variant="outlined">
-                        Bekor qilish
-                      </LoadingButton>
-                      <LoadingButton variant="contained">
-                        Tasdiqlash
-                      </LoadingButton>
+                      {filterStatus === "awaits" && (
+                        <>
+                          <RejectBtn id={e.id} />
+                          <AcceptBtn id={e.id} />
+                        </>
+                      )}
+                      {filterStatus === "accept" && <RejectBtn id={e.id} />}
+                      {filterStatus === "reject" && <AcceptBtn id={e.id} />}
                     </Box>
                   </Box>
                 );
