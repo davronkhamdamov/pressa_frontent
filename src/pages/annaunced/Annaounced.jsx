@@ -25,7 +25,7 @@ const Annaounced = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [imgTitle, setImgTitle] = useState("");
   const [isSubmit, setIsSubmit] = useState(false);
-  const [DateInputEl, setDateInputEl] = useState(dayjs);
+  const [DateInputEl, setDateInputEl] = useState(dayjs());
   const [timeInputEl, setTimeInputEl] = useState(dayjs());
   const [yonalishInputEl, setYonalishInputEl] = useState();
   const [ichkiYonalishIchkiInputEl, setIchkiYonalishIchkiInputEl] = useState();
@@ -73,8 +73,10 @@ const Annaounced = () => {
         img_url: imgUrl,
         title: themeTitleInputEl.current.value,
         subject_text: ThemeTextInputEl,
-        date: DateInputEl,
-        time: timeInputEl,
+        date: `${dataFormat(DateInputEl.$D)}-${dataFormat(DateInputEl.$M)}-${
+          DateInputEl.$y
+        }`,
+        time: `${dataFormat(timeInputEl.$H)}:${dataFormat(timeInputEl.$m)}`,
         yonalish: yonalishInputEl,
         ichki_yonalish: ichkiYonalishIchkiInputEl,
         link: linkInputEl,
@@ -100,9 +102,10 @@ const Annaounced = () => {
         setIsSubmit(false);
       });
   };
-  const dataFormat = (el) => {
+  function dataFormat(el) {
     return String(el).padStart(2, 0);
-  };
+  }
+
   return (
     <Container fixed sx={{ margin: "100px auto" }}>
       <Link to="/" className="home_page_link">
@@ -139,11 +142,7 @@ const Annaounced = () => {
                 <p className="date_text">O’tkaziladigan sanani kiriting</p>
                 <DatePicker
                   value={DateInputEl}
-                  onChange={(e) =>
-                    setDateInputEl(
-                      `${dataFormat(e.$D)}-${dataFormat(e.$M)}-${e.$y}`
-                    )
-                  }
+                  onChange={(e) => setDateInputEl(e)}
                   sx={{ width: "100%" }}
                   disablePast
                 />
@@ -154,9 +153,7 @@ const Annaounced = () => {
               >
                 <TimePicker
                   value={timeInputEl}
-                  onChange={(e) =>
-                    setTimeInputEl(`${dataFormat(e.$H)}:${dataFormat(e.$m)}`)
-                  }
+                  onChange={(e) => setTimeInputEl(e)}
                   sx={{ width: "100%" }}
                   label="Vaqtni belgilang"
                 />
