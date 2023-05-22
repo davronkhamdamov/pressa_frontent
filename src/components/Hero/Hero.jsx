@@ -1,13 +1,12 @@
+import React, { useEffect, useState } from "react";
 import {
   Container,
   Typography,
   Box,
   FormControl,
-  InputLabel,
   Select,
   MenuItem,
 } from "@mui/material";
-import React from "react";
 import "./Hero.css";
 import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
@@ -16,13 +15,38 @@ import dayjs from "dayjs";
 import Autocomplete from "@mui/material/Autocomplete";
 import TextField from "@mui/material/TextField";
 import LoadingButton from "@mui/lab/LoadingButton";
+import { useDispatch } from "react-redux";
+import { newItemAction } from "../../redux/reduser";
 
 const Hero = () => {
-  const [age, setAge] = React.useState("");
-
-  const handleChange = (event) => {
-    setAge(event.target.value);
+  const dataFormat = (el) => {
+    return String(el).padStart(2, 0);
   };
+  const date1 = dayjs(new Date());
+
+  const [isOnline, setIsOnline] = useState("");
+  const [date, setDate] = useState(
+    `${dataFormat(date1.$D)}-${dataFormat(date1.$M)}-${date1.$y}`
+  );
+  const [yonalish, setYonalish] = useState([]);
+  const [fullname, setFullname] = useState([]);
+  const dispatch = useDispatch();
+  const [allData, setAllData] = useState([]);
+  useEffect(() => {
+    dispatch(newItemAction([]));
+    fetch("http://localhost:4000/announcement/list", {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        setAllData(data);
+        dispatch(newItemAction(data));
+      });
+  }, []);
+
   return (
     <div className="hero">
       <Container maxWidth="xl">
@@ -50,6 +74,10 @@ const Hero = () => {
             <LocalizationProvider dateAdapter={AdapterDayjs}>
               <DemoContainer components={["DatePicker"]}>
                 <DatePicker
+                  onChange={(e) =>
+                    setDate(`${dataFormat(e.$D)}-${dataFormat(e.$M)}-${e.$y}`)
+                  }
+                  disablePast
                   format="DD - MM - YYYY"
                   defaultValue={dayjs(new Date())}
                 />
@@ -71,6 +99,10 @@ const Hero = () => {
                 { title: "Matematika", isCategory: "Ta’lim" },
                 { title: "Fizika", isCategory: "Ta’lim" },
               ]}
+              onChange={(event, value) => setYonalish(value)}
+              isOptionEqualToValue={(option, value) => {
+                option.title === value.title;
+              }}
               getOptionLabel={(option) => option.title}
               groupBy={(option) => option.isCategory}
               renderInput={(params) => (
@@ -92,11 +124,13 @@ const Hero = () => {
                 sx={{ width: "290px" }}
                 labelId="demo-simple-select-label"
                 id="demo-simple-select"
-                value={age}
-                onChange={handleChange}
+                value={isOnline}
+                onChange={(e) => {
+                  setIsOnline(e.target.value);
+                }}
               >
-                <MenuItem value={"offline"}>Offline</MenuItem>
-                <MenuItem value={"online"}>Online</MenuItem>
+                <MenuItem value={"Offline"}>Offline</MenuItem>
+                <MenuItem value={"Online"}>Online</MenuItem>
               </Select>
             </FormControl>
           </Box>
@@ -105,8 +139,9 @@ const Hero = () => {
               multiple
               limitTags={1}
               id="multiple-limit-tags"
-              options={[{ title: "The Shawshank Redemption", year: 1994 }]}
-              getOptionLabel={(option) => option.title}
+              options={allData}
+              getOptionLabel={(option) => option.fullname}
+              onChange={(event, value) => setFullname(value)}
               renderInput={(params) => (
                 <TextField {...params} placeholder="Ismlar" />
               )}
@@ -119,7 +154,24 @@ const Hero = () => {
           </Box>
           <Box className="box_item">
             <LoadingButton
-              loading
+              onClick={() => {
+                fetch("http://localhost:4000/announcement/filter", {
+                  method: "POST",
+                  body: JSON.stringify({
+                    date,
+                    yonalish,
+                    isOnline,
+                    fullname,
+                  }),
+                  headers: {
+                    "Content-Type": "application/json",
+                  },
+                })
+                  .then((res) => res.json())
+                  .then((data) => {
+                    alert(data);
+                  });
+              }}
               loadingIndicator="Izlamoqda..."
               variant="contained"
               sx={{
