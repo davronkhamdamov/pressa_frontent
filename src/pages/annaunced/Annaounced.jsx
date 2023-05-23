@@ -1,10 +1,13 @@
 import {
   Autocomplete,
   Box,
+  Button,
   Container,
+  Modal,
   Paper,
   TextField,
   TextareaAutosize,
+  Typography,
 } from "@mui/material";
 import { Link } from "react-router-dom";
 import HomeIcon from "@mui/icons-material/Home";
@@ -19,6 +22,21 @@ import SendIcon from "@mui/icons-material/Send";
 import { LoadingButton } from "@mui/lab";
 import errors from "../../utils/errors";
 import dayjs from "dayjs";
+
+const style = {
+  position: "absolute",
+  top: "50%",
+  left: "50%",
+  transform: "translate(-50%, -50%)",
+  width: 600,
+  height: 400,
+  bgcolor: "background.paper",
+  boxShadow: 24,
+  p: 10,
+  textAlign: "center",
+  borderRadius: "10px",
+  outline: "none",
+};
 
 const Annaounced = () => {
   const [isOnline, setIsOnlion] = useState(true);
@@ -92,11 +110,11 @@ const Annaounced = () => {
       .then((res) => res.json())
       .then((data) => {
         if (data.error) {
-          console.log(data);
           let arr = [];
           data.message.errors.map((e, i) => {
             arr[errors.indexOf(e.message)] = true;
           });
+          setOpen(true);
           setIsError(arr);
         }
         setIsSubmit(false);
@@ -105,6 +123,9 @@ const Annaounced = () => {
   function dataFormat(el) {
     return String(el).padStart(2, 0);
   }
+  const [open, setOpen] = useState(false);
+  const handleOpen = () => setOpen(false);
+  const handleClose = () => setOpen(false);
 
   return (
     <Container fixed sx={{ margin: "100px auto" }}>
@@ -530,6 +551,31 @@ const Annaounced = () => {
           </Box>
         </Paper>
       </Container>
+
+      <Modal
+        open={open}
+        onClose={handleClose}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+      >
+        <Box sx={style}>
+          <Typography id="modal-modal-title" variant="h4" component="h2">
+            Sizning e’loningiz yuborildi
+          </Typography>
+          <br />
+          <Typography
+            id="modal-modal-description"
+            sx={{ fontSize: "18px", mt: 2 }}
+          >
+            Yaqin soatlar ichda admin tomonidan tekshirib chiqladi va saytda
+            e’lon qilinadi!
+          </Typography>
+          <br />
+          <Button onClick={handleOpen} variant="contained">
+            Ok
+          </Button>
+        </Box>
+      </Modal>
     </Container>
   );
 };
