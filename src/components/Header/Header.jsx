@@ -160,29 +160,33 @@ function Header(props) {
               </Button>
             ))}
           </Box>
-          <Button
-            sx={{
-              width: { lg: "180px" },
-              fontSize: { lg: "15px", md: "15px", sm: "13px" },
-              backgroundColor: "#FE8B37",
-              ":hover": { backgroundColor: "#ee8a11" },
+          <Link
+            to="/annaunced"
+            style={{
+              textDecoration: "none",
+              color: "#eee",
+              width: "180px",
+              height: "40px",
+              background: "rgb(254, 139, 55);",
+              borderRadius: "8px",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              gap: "10px",
             }}
-            variant="contained"
-            size="large"
-            startIcon={<Add />}
           >
-            <Link
-              to="/annaunced"
-              style={{ textDecoration: "none", color: "#eee " }}
+            <Add />
+            <Typography
+              variant="p"
+              sx={{
+                display: { xs: "none", md: "flex" },
+                textTransform: "uppercase",
+                fontSize: "15px",
+              }}
             >
-              <Typography
-                variant="p"
-                sx={{ display: { xs: "none", md: "block" } }}
-              >
-                E’lon berish
-              </Typography>
-            </Link>
-          </Button>
+              E’lon berish
+            </Typography>
+          </Link>
         </Toolbar>
       </AppBar>
       <Box component="nav">
