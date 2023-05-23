@@ -34,7 +34,7 @@ const Hero = () => {
   const [allData, setAllData] = useState([]);
   useEffect(() => {
     dispatch(newItemAction([]));
-    fetch("http://localhost:4000/announcement/list", {
+    fetch("http://localhost:4000/announcement/accept", {
       method: "GET",
       headers: {
         "Content-Type": "application/json",

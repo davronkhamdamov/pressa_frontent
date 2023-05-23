@@ -11,7 +11,14 @@ import NotificationsIcon from "@mui/icons-material/Notifications";
 import MoreIcon from "@mui/icons-material/MoreVert";
 import SearchIcon from "@mui/icons-material/Search";
 import "./Admin.css";
-import { Avatar, Container, Stack } from "@mui/material";
+import {
+  Avatar,
+  Button,
+  Container,
+  Skeleton,
+  Stack,
+  Typography,
+} from "@mui/material";
 import HomeOutlinedIcon from "@mui/icons-material/HomeOutlined";
 import ArrowCircleLeftOutlinedIcon from "@mui/icons-material/ArrowCircleLeftOutlined";
 import SettingsOutlinedIcon from "@mui/icons-material/SettingsOutlined";
@@ -143,6 +150,7 @@ export default function PrimarySearchAppBar({ setIsAdmin }) {
   }
 
   React.useEffect(() => {
+    setChangeStatusBtn(false);
     fetch("http://localhost:4000/announcement/" + filterStatus, {
       headers: {
         token: localStorage.getItem("token"),
@@ -150,6 +158,7 @@ export default function PrimarySearchAppBar({ setIsAdmin }) {
     })
       .then((res) => res.json())
       .then((data) => {
+        setChangeStatusBtn(true);
         if (data.errorName === "AuthorizationError") {
           setIsAdmin(false);
         }
@@ -205,6 +214,78 @@ export default function PrimarySearchAppBar({ setIsAdmin }) {
     );
   };
 
+  const SkeletonSchema = () => {
+    return new Array(6).fill("#").map((e, i) => {
+      return (
+        <Box
+          key={i}
+          sx={{
+            width: "70%",
+            height: "100px",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+            borderBottom: "1px solid rgba(0,0,0,0.3)",
+            margin: "10px",
+          }}
+        >
+          <Box sx={{ width: "70%" }}>
+            <div className="list_title">
+              <Typography component="p" variant="h4">
+                <Skeleton />
+              </Typography>
+            </div>
+            <br />
+            <Box
+              sx={{
+                display: "flex",
+                justifyContent: "space-between",
+              }}
+            >
+              <span className="list_author" style={{ width: "100px" }}>
+                <Typography component="p" variant="p">
+                  <Skeleton />
+                </Typography>
+              </span>
+              <span className="list_text" style={{ width: "100px" }}>
+                <Typography component="p" variant="p">
+                  <Skeleton />
+                </Typography>
+              </span>
+              <span className="list_text" style={{ width: "100px" }}>
+                <Typography component="p" variant="p">
+                  <Skeleton />
+                </Typography>
+              </span>
+              <span className="list_text" style={{ width: "100px" }}>
+                <Typography component="p" variant="p">
+                  <Skeleton />
+                </Typography>
+              </span>
+              <span className="list_text" style={{ width: "100px" }}>
+                <Typography component="p" variant="p">
+                  <Skeleton />
+                </Typography>
+              </span>
+            </Box>
+          </Box>
+          <Box sx={{ display: "flex", gap: "20px" }}>
+            <Skeleton
+              variant="rectangular"
+              width="100px"
+              height="35px"
+            ></Skeleton>
+
+            <Skeleton
+              variant="rectangular"
+              width="100px"
+              height="35px"
+            ></Skeleton>
+          </Box>
+        </Box>
+      );
+    });
+  };
   return (
     <Box sx={{ display: "flex" }}>
       <Box
@@ -478,49 +559,53 @@ export default function PrimarySearchAppBar({ setIsAdmin }) {
                 height: "auto",
               }}
             >
-              {allData?.map((e) => {
-                return (
-                  <Box
-                    key={e.id}
-                    sx={{
-                      width: "70%",
-                      height: "100px",
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "space-between",
-                      borderBottom: "1px solid rgba(0,0,0,0.3)",
-                      margin: "10px",
-                    }}
-                  >
-                    <Box sx={{ width: "70%" }}>
-                      <p className="list_title">{e.title}</p>
-                      <br />
-                      <Box
-                        sx={{
-                          display: "flex",
-                          justifyContent: "space-between",
-                        }}
-                      >
-                        <span className="list_author">{e?.fullname}</span>
-                        <span className="list_text">{e.phone_number}</span>
-                        <span className="list_text">{e.date}</span>
-                        <span className="list_text">{e.time}</span>
-                        <span className="list_text">{e.yonalish}</span>
+              {changeStatusBtn ? (
+                allData?.map((e) => {
+                  return (
+                    <Box
+                      key={e.id}
+                      sx={{
+                        width: "70%",
+                        height: "100px",
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "space-between",
+                        borderBottom: "1px solid rgba(0,0,0,0.3)",
+                        margin: "10px",
+                      }}
+                    >
+                      <Box sx={{ width: "70%" }}>
+                        <p className="list_title">{e.title}</p>
+                        <br />
+                        <Box
+                          sx={{
+                            display: "flex",
+                            justifyContent: "space-between",
+                          }}
+                        >
+                          <span className="list_author">{e?.fullname}</span>
+                          <span className="list_text">{e.phone_number}</span>
+                          <span className="list_text">{e.date}</span>
+                          <span className="list_text">{e.time}</span>
+                          <span className="list_text">{e.yonalish}</span>
+                        </Box>
+                      </Box>
+                      <Box sx={{ display: "flex", gap: "20px" }}>
+                        {filterStatus === "awaits" && (
+                          <>
+                            <RejectBtn id={e.id} />
+                            <AcceptBtn id={e.id} />
+                          </>
+                        )}
+                        {filterStatus === "accept" && <RejectBtn id={e.id} />}
+                        {filterStatus === "reject" && <AcceptBtn id={e.id} />}
                       </Box>
                     </Box>
-                    <Box sx={{ display: "flex", gap: "20px" }}>
-                      {filterStatus === "awaits" && (
-                        <>
-                          <RejectBtn id={e.id} />
-                          <AcceptBtn id={e.id} />
-                        </>
-                      )}
-                      {filterStatus === "accept" && <RejectBtn id={e.id} />}
-                      {filterStatus === "reject" && <AcceptBtn id={e.id} />}
-                    </Box>
-                  </Box>
-                );
-              })}
+                  );
+                })
+              ) : (
+                <SkeletonSchema />
+              )}
             </Box>
           </Box>
         </Box>
