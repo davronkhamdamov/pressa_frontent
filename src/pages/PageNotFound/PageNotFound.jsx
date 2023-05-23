@@ -22,6 +22,7 @@ const PageNotFound = () => {
           Return To Home
         </Link>
       </div>
+      <Link to="admin">.</Link>
     </div>
   );
 };
