@@ -151,7 +151,7 @@ export default function PrimarySearchAppBar({ setIsAdmin }) {
 
   React.useEffect(() => {
     setChangeStatusBtn(false);
-    fetch("http://localhost:4000/announcement/" + filterStatus, {
+    fetch(import.meta.env.VITE_APP_BASE_URL + "/announcement/" + filterStatus, {
       headers: {
         token: localStorage.getItem("token"),
       },
@@ -167,7 +167,7 @@ export default function PrimarySearchAppBar({ setIsAdmin }) {
   }, [filterStatus]);
 
   const ChangeStatusFetch = (id, isAccept) => {
-    fetch("http://localhost:4000/announcement/update", {
+    fetch(import.meta.env.VITE_APP_BASE_URL + "/announcement/update", {
       method: "POST",
       body: JSON.stringify({
         id,

@@ -34,7 +34,7 @@ const Hero = () => {
   const [allData, setAllData] = useState([]);
   useEffect(() => {
     dispatch(newItemAction([]));
-    fetch("http://localhost:4000/announcement/accept", {
+    fetch(import.meta.env.VITE_APP_BASE_URL + "/announcement/accept", {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -156,18 +156,21 @@ const Hero = () => {
             <LoadingButton
               onClick={() => {
                 dispatch(newItemAction([]));
-                fetch("http://localhost:4000/announcement/filter", {
-                  method: "POST",
-                  body: JSON.stringify({
-                    date,
-                    yonalish,
-                    isOnline,
-                    fullname,
-                  }),
-                  headers: {
-                    "Content-Type": "application/json",
-                  },
-                })
+                fetch(
+                  import.meta.env.VITE_APP_BASE_URL + "/announcement/filter",
+                  {
+                    method: "POST",
+                    body: JSON.stringify({
+                      date,
+                      yonalish,
+                      isOnline,
+                      fullname,
+                    }),
+                    headers: {
+                      "Content-Type": "application/json",
+                    },
+                  }
+                )
                   .then((res) => res.json())
                   .then((data) => {
                     dispatch(newItemAction(data));

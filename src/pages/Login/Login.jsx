@@ -39,7 +39,7 @@ export default function SignIn({ setIsAdmin }) {
   const handleSubmit = (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
-    fetch("http://localhost:4000/admin/login", {
+    fetch(import.meta.env.VITE_APP_BASE_URL + "/admin/login", {
       method: "POST",
       body: JSON.stringify({
         username: data.get("email").trim(),

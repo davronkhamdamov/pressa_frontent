@@ -67,7 +67,7 @@ const Annaounced = () => {
 
   const submitData = () => {
     setIsSubmit(true);
-    fetch("http://localhost:4000/announcement/create", {
+    fetch(import.meta.env.VITE_APP_BASE_URL + "/announcement/create", {
       method: "POST",
       body: JSON.stringify({
         img_url: imgUrl,

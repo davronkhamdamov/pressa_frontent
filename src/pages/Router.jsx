@@ -11,7 +11,7 @@ const Router = () => {
   const [isAdmin, setIsAdmin] = useState(false);
   const [isLoading, setisLoading] = useState(false);
   useEffect(() => {
-    fetch("http://localhost:4000/admin", {
+    fetch(import.meta.env.VITE_APP_BASE_URL + "/admin", {
       method: "GET",
       headers: {
         token: localStorage.getItem("token"),
