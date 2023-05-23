@@ -158,7 +158,6 @@ export default function PrimarySearchAppBar({ setIsAdmin }) {
   }, [filterStatus]);
 
   const ChangeStatusFetch = (id, isAccept) => {
-    setChangeStatusBtn(true);
     fetch("http://localhost:4000/announcement/update", {
       method: "POST",
       body: JSON.stringify({
@@ -167,33 +166,39 @@ export default function PrimarySearchAppBar({ setIsAdmin }) {
       }),
       headers: {
         "Content-Type": "application/json",
-        token: localStorage.getItem("token"),
       },
     })
       .then((res) => res.json())
       .then((data) => {
-        setChangeStatusBtn(false);
         if (data.errorName === "AuthorizationError") setIsAdmin(false);
         setAllData(data);
       });
   };
   const RejectBtn = ({ id }) => {
+    const [loading, setLoading] = React.useState(false);
     return (
       <LoadingButton
-        loading={changeStatusBtn}
+        loading={loading}
         variant="outlined"
-        onClick={() => ChangeStatusFetch(id, false)}
+        onClick={() => {
+          ChangeStatusFetch(id, false);
+          setLoading(true);
+        }}
       >
         Bekor qilish
       </LoadingButton>
     );
   };
   const AcceptBtn = ({ id }) => {
+    const [loading, setLoading] = React.useState(false);
     return (
       <LoadingButton
-        loading={changeStatusBtn}
+        loading={loading}
         variant="contained"
-        onClick={() => ChangeStatusFetch(id, true)}
+        onClick={() => {
+          setLoading(true);
+          ChangeStatusFetch(id, true);
+        }}
       >
         Tasdiqlash
       </LoadingButton>
