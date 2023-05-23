@@ -485,7 +485,7 @@ const Annaounced = () => {
                 Rasm Yuklash
               </LoadingButton>
               <Box>
-                {imgUrl && (
+                {(imgUrl || isError[9]) && (
                   <Box>
                     <p>{imgTitle}</p>
                     <p
@@ -495,11 +495,11 @@ const Annaounced = () => {
                         color: "rgba(0,0,0,0.4)",
                       }}
                     >
-                      Rasm jo'natishga tayyor
+                      {imgUrl && "Rasm jo'natishga tayyor"}
                     </p>
                   </Box>
                 )}
-                {isError[9] && (
+                {isError[9] && !imgUrl && !imgTitle && (
                   <p style={{ color: "#d32f2f", fontSize: "14px" }}>
                     Iltimos birorta bir rasm tanlang
                   </p>
