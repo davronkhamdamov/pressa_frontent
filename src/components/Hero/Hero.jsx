@@ -155,6 +155,7 @@ const Hero = () => {
           <Box className="box_item">
             <LoadingButton
               onClick={() => {
+                dispatch(newItemAction([]));
                 fetch("http://localhost:4000/announcement/filter", {
                   method: "POST",
                   body: JSON.stringify({
@@ -169,7 +170,7 @@ const Hero = () => {
                 })
                   .then((res) => res.json())
                   .then((data) => {
-                    alert(data);
+                    dispatch(newItemAction(data));
                   });
               }}
               loadingIndicator="Izlamoqda..."
