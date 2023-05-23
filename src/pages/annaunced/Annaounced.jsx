@@ -21,7 +21,7 @@ import errors from "../../utils/errors";
 import dayjs from "dayjs";
 
 const Annaounced = () => {
-  const [isOnline, setIsOnlion] = useState(false);
+  const [isOnline, setIsOnlion] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
   const [imgTitle, setImgTitle] = useState("");
   const [isSubmit, setIsSubmit] = useState(false);
