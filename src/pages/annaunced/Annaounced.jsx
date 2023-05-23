@@ -114,6 +114,7 @@ const Annaounced = () => {
           data.message.errors.map((e, i) => {
             arr[errors.indexOf(e.message)] = true;
           });
+          setIsSubmit(false);
           return setIsError(arr);
         }
         setOpen(true);
